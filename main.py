@@ -62,9 +62,17 @@ def recon_name():
 
     distances = distances.tolist()
 
+    min_distance_idx = -1
     if len(distances) != 0:
-        return face_names[distances.index(min(distances))]
+        min_distance = 1
 
+        for i in range(len(distances)):
+            if distances[i] < 0.5 and distances[i] < min_distance:
+                min_distance = distances[i]
+                min_distance_idx = i
+
+    if min_distance_idx != -1:
+        return face_names[min_distance_idx]
     return '?'
 
 app.run()
