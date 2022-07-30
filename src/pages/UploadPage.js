@@ -8,6 +8,7 @@ export const UploadPage = () => {
   const [imageSrc, setImageSrc] = useState('');
   const [rects, setRects] = useState([]);
   const [faces, setFaces] = useState([]);
+  const [modifyFace, setModifyFace] = useState({});
 
   const handleButtonClick = () => {
     const input = document.createElement('input');
@@ -29,6 +30,10 @@ export const UploadPage = () => {
   const img = new Image();
   const cropHelperCanvas = document.createElement('canvas');
   const cropHelperCanvasCtx = cropHelperCanvas.getContext('2d');
+
+  const setFaceNameAtIndex = (name, index) => {
+    console.log(faces);
+  };
 
   img.onload = () => {
     ctx.canvas.width = img.width;
@@ -56,25 +61,29 @@ export const UploadPage = () => {
       const key = uuidv4().replaceAll('-', '');
       const imgData = cropHelperCanvas.toDataURL('image/png');
       const inputRef = createRef();
+      const currentFace = {
+        key, imgData, name: '?', inputRef,
+      };
+      const currentFaceIdx = localFaces.length
+      localFaces = [
+        ...localFaces,
+        currentFace];
+
       axios.post('/recon_name', {
         faceImg: imgData,
       }).then((resp) => {
-        document.getElementById(`input-${key}`).value = resp.data
+        if (resp.data !== '?') {
+          document.getElementById(`input-${key}`).value = resp.data;
+          setModifyFace({index: currentFaceIdx, name: resp.data});
+        }
+        // TODO: set age here from API
+
       });
+          setFaces(localFaces);
 
-      // TODO: set age here from API
 
-      localFaces = [
-        ...localFaces, {
-          key,
-          imgData,
-          name: '?',
-          inputRef,
-        },
-
-      ];
     }
-    setFaces(localFaces);
+
   };
 
   const handleFaceClick = (fIndex) => {
@@ -86,7 +95,21 @@ export const UploadPage = () => {
   useEffect(() => {
     ctx = document.getElementById('canvas').getContext('2d');
     img.src = imageSrc;
+
   }, [imageSrc]);
+
+  useEffect(() => {
+    if (modifyFace.index !== undefined) {
+      const theFace = faces[modifyFace.index];
+      theFace.name = modifyFace.name;
+      setFaces([
+        ...faces.slice(0, modifyFace.index),
+        theFace,
+        ...faces.slice(modifyFace.index + 1, faces.length)]);
+
+      setModifyFace({});
+    }
+  }, [faces, modifyFace]);
 
   return (<>
     <Button onClick={handleButtonClick}
@@ -108,32 +131,30 @@ export const UploadPage = () => {
         gap: '30px',
         justifyContent: 'center',
       }}>
-        {faces.map((f, fIdx) => (
-            <Card
-                key={f.key}
-                size={'small'}
-                onClick={() => handleFaceClick(fIdx)}
-                style={{width: '120px'}}
-                hoverable={true}
-                cover={<img src={f.imgData} alt={`face-${f.name}`}/>}>
-              <Card.Meta
-                  title={<Input
-                      style={{textAlign: 'center'}}
-                      ref={f.inputRef}
-                      onBlur={(ev) => {
-                        const {key, imgData} = faces[fIdx];
-                        axios.put('/face', {
-                          faceImg: imgData,
-                          faceKey: key,
-                          faceName: ev.target.value,
-                        }).then((resp) => {
-                          console.log(resp.data);
-                        });
-                      }}
-                      id={`input-${f.key}`}
-                      defaultValue={f.name}/>} description={'Age: ?'}/>
-            </Card>
-        ))}
+        {faces.map((f, fIdx) => (<Card
+            key={`face-cards-${f.key}-${f.name}`}
+            size={'small'}
+            onClick={() => handleFaceClick(fIdx)}
+            style={{width: '120px'}}
+            hoverable={true}
+            cover={<img src={f.imgData} alt={`face-${f.name}`}/>}>
+          <Card.Meta
+              title={<Input
+                  style={{textAlign: 'center'}}
+                  ref={f.inputRef}
+                  onBlur={(ev) => {
+                    const {key, imgData} = faces[fIdx];
+                    axios.put('/face', {
+                      faceImg: imgData,
+                      faceKey: key,
+                      faceName: ev.target.value,
+                    }).then((resp) => {
+                      console.log(resp.data);
+                    });
+                  }}
+                  id={`input-${f.key}`}
+                  defaultValue={f.name}/>} description={'Age: ?'}/>
+        </Card>))}
       </div>
     </Drawer>
   </>);
