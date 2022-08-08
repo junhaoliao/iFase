@@ -5,12 +5,17 @@ import threading
 from io import BytesIO
 
 import face_recognition
+from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 from flask import Flask, request
 
 faces_path = 'faces'
 
 app = Flask(__name__)
 
+face_names = []
+face_encodings = []
+face_keys = []
 
 @app.route('/image', methods=['POST'])
 def upload_image():
@@ -27,10 +32,15 @@ def upload_face():
     face_img = request.json['faceImg'].split(',')[1]
     face_name = request.json['faceName']
 
-    face_file_path = os.path.join(faces_path, f'{face_key}_{face_name}.png')
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
     with open(face_file_path, 'wb') as face_file:
         image_bytes = base64.b64decode(face_img)
         face_file.write(image_bytes)
+
+    with Image.open(face_file_path) as face_file:
+        metadata = PngInfo()
+        metadata.add_text("FaceName", face_name)
+        face_file.save(face_file_path, pnginfo=metadata)
 
     return 'success'
 
@@ -41,13 +51,17 @@ def recon_name():
     face_img = request.json['faceImg'].split(',')[1]
 
     with recon_lock:
-        face_names = []
-        face_encodings = []
         for f in os.listdir(faces_path):
-            name = f.split('_')[1].split('.')[0]
-            face_names.append(name)
+            key = f.split('.')[0]
+            if key in face_keys:
+                continue
+
+            face_keys.append(key)
 
             face_file_path = os.path.join(faces_path, f)
+            with Image.open(face_file_path) as face_file:
+                face_names.append(face_file.text['FaceName'])
+
             known_image = face_recognition.load_image_file(face_file_path)
             known_encoding = face_recognition.face_encodings(known_image)[0]
 
