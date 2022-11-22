@@ -1,9 +1,12 @@
 # iFase
 ## Environment
 1. Git
-2. Node.js; https://nodejs.org/en/
+2. Node.js: https://nodejs.org/en/
 2. Python (3.10 or above): https://python.org
 3. Any IDE that works with Python (PyCharm or VS Code)
+4. [Mac] brew: https://brew.sh
+   [Windows] Visual Studio 2022: C++ Toolchain
+   [Linux] buildessentials
 
 ## Intialization
 
