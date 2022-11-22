@@ -1,16 +1,24 @@
 # iFase
+## Environment
+1. Git
+2. Node.js; https://nodejs.org/en/
+2. Python (3.10 or above): https://python.org
+3. Any IDE that works with Python (PyCharm or VS Code)
 
 ## Intialization
+
 ```
 # in case depedencies were previously installed globally
 pip freeze | xargs pip uninstall -y
 ```
 
-1. Setup Virtual Environment
+1. Clone the repo
+
+2. Setup Virtual Environment
 ```
 python3 -m virtualenv venv
 ```
-2. (Need this everytime before launching the backend) Enable the Virtual Environment
+3. (Need this everytime before launching the backend) Enable the Virtual Environment
 ```
 # if using bash/zsh
 source venv/bin/activate
@@ -18,7 +26,7 @@ source venv/bin/activate
 # OR (EECG UG) if using csh
 source venv/bin/activate.csh
 ```
-3. Install dependencies
+4. Install dependencies
 ```
 pip install -r requirements.txt
 ```
