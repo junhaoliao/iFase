@@ -34,3 +34,6 @@ source venv/bin/activate.csh
 pip install -r requirements.txt
 ```
 
+## FAQ
+1. If the Python backend complains about not being able to store faces, make a directory named "faces" in the project root directory. 
+
