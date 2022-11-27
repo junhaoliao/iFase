@@ -1,12 +1,19 @@
 import './App.css';
 import {Menu} from 'antd';
 import {useState} from 'react';
+//import Ant design UI
 import {
   FundViewOutlined,
-  TaobaoCircleOutlined,
+  HomeOutlined,
   UploadOutlined,
+  CameraOutlined
 } from '@ant-design/icons';
+
+
 import {UploadPage} from './pages/UploadPage';
+import {ViewPage} from './pages/ViewPage';
+import {CameraPage} from './pages/CameraPage';
+import {WelcomePage} from './pages/WelcomePage';
 
 const App = () => {
   const [currentMenu, setCurrentMenu] = useState('upload');
@@ -14,14 +21,18 @@ const App = () => {
 
   const menuItems = [
     {
-      label: <TaobaoCircleOutlined
+      label: <HomeOutlined
           style={{fontSize: '32px', marginTop: '12px'}}/>, key: 'home',
     },
     {
       label: 'Upload', key: 'upload', icon: <UploadOutlined/>,
     }, {
       label: 'View', key: 'app', icon: <FundViewOutlined/>,
-    }];
+    },{
+      label: 'Camera', key: 'cam', icon: <CameraOutlined />,
+    }
+
+    ];
 
   const handleMenuClick = (ev) => {
     if (ev.key === 'home') {
@@ -35,6 +46,16 @@ const App = () => {
   if (currentMenu === 'upload'){
     page = <UploadPage/>
   }
+  if (currentMenu === 'welcome'){
+    page = <WelcomePage/>
+  }
+  if (currentMenu === 'view'){
+    page = <ViewPage/>
+  }
+  if (currentMenu === 'camera'){
+    page = <CameraPage/>
+  }
+
 
   return (<div className="App">
     <Menu onClick={handleMenuClick}
