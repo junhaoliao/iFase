@@ -4,7 +4,7 @@ import {useState} from 'react';
 //import Ant design UI
 import {
   FundViewOutlined,
-  TaobaoCircleOutlined,
+  HomeOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
 
@@ -17,7 +17,7 @@ const App = () => {
 
   const menuItems = [
     {
-      label: <TaobaoCircleOutlined
+      label: <HomeOutlined
           style={{fontSize: '32px', marginTop: '12px'}}/>, key: 'home',
     },
     {
