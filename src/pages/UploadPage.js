@@ -1,10 +1,7 @@
-import {Card, Drawer, Input} from 'antd';
+import {Button,Card, Drawer,Input} from 'antd';
 import axios from 'axios';
 import {createRef, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
-//import Material UI
-//import * as React from 'react';
-import Button from '@mui/material/Button';
 
 export const UploadPage = () => {
 
@@ -115,8 +112,9 @@ export const UploadPage = () => {
   }, [faces, modifyFace]);
 
   return (<>
-    <Button onClick={handleButtonClick}
-            type={'primary'}>Upload</Button>
+    <Button variant="contained" onClick={handleButtonClick}>
+      Upload
+    </Button>
     <br/>
     <canvas id={'canvas'}/>
     <Drawer
@@ -160,5 +158,6 @@ export const UploadPage = () => {
         </Card>))}
       </div>
     </Drawer>
+
   </>);
 };
