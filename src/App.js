@@ -26,7 +26,7 @@ const App = () => {
           style={{fontSize: '32px', marginTop: '12px'}}/>, key: 'home',
     },
     {
-      label: 'Welcome', key: 'welcome', icon:<NotificationOutlined/>,
+      label: 'About', key: 'about', icon:<NotificationOutlined/>,
     },
     {
       label: 'Upload', key: 'upload', icon: <UploadOutlined/>,
@@ -50,7 +50,7 @@ const App = () => {
   if (currentMenu === 'upload'){
     page = <UploadPage/>
   }
-  if (currentMenu === 'welcome'){
+  if (currentMenu === 'about'){
     page = <WelcomePage/>
   }
   if (currentMenu === 'view'){
