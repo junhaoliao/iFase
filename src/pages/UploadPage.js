@@ -1,7 +1,10 @@
-import {Button, Card, Drawer, Input} from 'antd';
+import {Card, Drawer, Input} from 'antd';
 import axios from 'axios';
 import {createRef, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
+//import Material UI
+//import * as React from 'react';
+import Button from '@mui/material/Button';
 
 export const UploadPage = () => {
 
@@ -62,7 +65,7 @@ export const UploadPage = () => {
       const imgData = cropHelperCanvas.toDataURL('image/png');
       const inputRef = createRef();
       const currentFace = {
-        key, imgData, name: '?', inputRef,
+        key, imgData, name: '??', inputRef,
       };
       const currentFaceIdx = localFaces.length
       localFaces = [
@@ -153,7 +156,7 @@ export const UploadPage = () => {
                     });
                   }}
                   id={`input-${f.key}`}
-                  defaultValue={f.name}/>} description={'Age: ?'}/>
+                  defaultValue={f.name}/>} description={''}/>
         </Card>))}
       </div>
     </Drawer>
