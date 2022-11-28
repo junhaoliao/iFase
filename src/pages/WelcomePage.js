@@ -14,6 +14,7 @@ import {
 import { CaretRightOutlined } from '@ant-design/icons';
 import React from 'react';
 import cat668 from './cat668.png';
+import sbd from './SBD.jpg';
 
 
 import axios from 'axios';
@@ -82,6 +83,13 @@ export const WelcomePage = () => {
           'However, since we are using an open-source library for facial recognition, the accuracy and performance cannot be guaranteed. Therefore, deciding whether the image is a human face or not will also not be within the scope, yet we will notify the user the case where no human face is detected.\n'
       }</p>
     </Panel>
+
+    <Panel header="System Block Diagram" key="3" className="site-collapse-custom-panel">
+      <p Align="left">{
+        <Image width={800} src={sbd} />
+      }</p>
+    </Panel>
+
   </Collapse>
 
 
