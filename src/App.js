@@ -17,7 +17,7 @@ import {CameraPage} from './pages/CameraPage';
 import {WelcomePage} from './pages/WelcomePage';
 
 const App = () => {
-  const [currentMenu, setCurrentMenu] = useState('upload');
+  const [currentMenu, setCurrentMenu] = useState('about');
 
 
   const menuItems = [
