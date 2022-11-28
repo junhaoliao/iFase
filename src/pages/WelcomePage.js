@@ -3,7 +3,8 @@ import {Card,
     Input,
     Layout,
     Carousel,
-    Collapse} from 'antd';
+    Collapse,
+    Image} from 'antd';
 
 import {
     TeamOutlined,
@@ -12,6 +13,7 @@ import {
 
 import { CaretRightOutlined } from '@ant-design/icons';
 import React from 'react';
+import cat668 from './cat668.png';
 
 
 import axios from 'axios';
@@ -28,6 +30,7 @@ const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   background: '#2996ff',
 };
+
 const { Panel } = Collapse;
 
 // const fs = require("fs");
@@ -42,9 +45,14 @@ export const WelcomePage = () => {
     };
 
   return (<>
+
+
     <Carousel effect="scrollx" autoplay="true">
         <div>
           <h3 style={contentStyle}>iFase: Real-time Recognition Application</h3>
+        </div>
+        <div>
+          <h3 style={contentStyle}><Image width={150} src={cat668} /></h3>
         </div>
         <div>
           <h3 style={contentStyle}><TeamOutlined />TEAM668</h3>
