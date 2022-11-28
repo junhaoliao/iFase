@@ -1,8 +1,11 @@
-import {Card,Drawer,Input} from 'antd';
+import {Card, Drawer, Input} from 'antd';
 import axios from 'axios';
 import {createRef, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {Button} from '@mui/material';
+//import Material UI
+//import * as React from 'react';
+import Button from '@mui/material/Button';
+
 export const UploadPage = () => {
 
   const [imageSrc, setImageSrc] = useState('');
@@ -30,18 +33,12 @@ export const UploadPage = () => {
   const img = new Image();
   const cropHelperCanvas = document.createElement('canvas');
   const cropHelperCanvasCtx = cropHelperCanvas.getContext('2d');
-  const maxWidth = 1280;
-  const maxHeight = 720;
-  //need to preprocess image before loading it to canvas
-  /*
-  lower boundary between 194x164 and 122x90
-   */
+
   const setFaceNameAtIndex = (name, index) => {
     console.log(faces);
   };
 
   img.onload = () => {
-
     ctx.canvas.width = img.width;
     ctx.canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
@@ -68,7 +65,7 @@ export const UploadPage = () => {
       const imgData = cropHelperCanvas.toDataURL('image/png');
       const inputRef = createRef();
       const currentFace = {
-        key, imgData, name: '?', inputRef,
+        key, imgData, name: '??', inputRef,
       };
       const currentFaceIdx = localFaces.length
       localFaces = [
@@ -118,9 +115,8 @@ export const UploadPage = () => {
   }, [faces, modifyFace]);
 
   return (<>
-    <Button variant="contained" onClick={handleButtonClick}>
-      Upload
-    </Button>
+    <Button onClick={handleButtonClick}
+            type={'primary'}>Upload</Button>
     <br/>
     <canvas id={'canvas'}/>
     <Drawer
@@ -138,16 +134,14 @@ export const UploadPage = () => {
         gap: '30px',
         justifyContent: 'center',
       }}>
-        {faces.map((f, fIdx) => (
-            <Card
+        {faces.map((f, fIdx) => (<Card
             key={`face-cards-${f.key}-${f.name}`}
             size={'small'}
             onClick={() => handleFaceClick(fIdx)}
             style={{width: '120px'}}
             hoverable={true}
             cover={<img src={f.imgData} alt={`face-${f.name}`}/>}>
-
-              <Card.Meta
+          <Card.Meta
               title={<Input
                   style={{textAlign: 'center'}}
                   ref={f.inputRef}
@@ -162,11 +156,9 @@ export const UploadPage = () => {
                     });
                   }}
                   id={`input-${f.key}`}
-                  defaultValue={f.name}/>} //description={'Age: ?'}
-              />
-            </Card>))}
+                  defaultValue={f.name}/>} description={''}/>
+        </Card>))}
       </div>
     </Drawer>
-
   </>);
 };
