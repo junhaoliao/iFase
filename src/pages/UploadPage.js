@@ -116,7 +116,7 @@ export const UploadPage = () => {
 
   return (<>
     <Button onClick={handleButtonClick}
-            type={'primary'}>Upload</Button>
+            type={'primary'} size={"small"}>Upload</Button>
     <br/>
     <canvas id={'canvas'}/>
     <Drawer
