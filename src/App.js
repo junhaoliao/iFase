@@ -26,14 +26,11 @@ const App = () => {
           style={{fontSize: '32px', marginTop: '12px'}}/>, key: 'home',
     },
     {
-      label: 'Welcome', key: 'welcome', icon:<NotificationOutlined/>,
-    },
-    {
       label: 'Upload', key: 'upload', icon: <UploadOutlined/>,
     }, {
-      label: 'Camera', key: 'cam', icon: <CameraOutlined />,
+      label: 'View', key: 'app', icon: <FundViewOutlined/>,
     },{
-      label: 'View', key: 'view', icon: <FundViewOutlined/>,
+      label: 'Camera', key: 'cam', icon: <CameraOutlined />,
     }
 
     ];
