@@ -33,7 +33,7 @@ const App = () => {
     }, {
       label: 'Camera', key: 'cam', icon: <CameraOutlined />,
     },{
-      label: 'View', key: 'app', icon: <FundViewOutlined/>,
+      label: 'View', key: 'view', icon: <FundViewOutlined/>,
     }
 
     ];
