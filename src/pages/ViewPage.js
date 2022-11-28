@@ -9,7 +9,6 @@ export const ViewPage = () => {
 const gridStyle = {
   width: '20%',
   textAlign: 'center',
-  hoverable: 'false',
 };
 
   return (<>
@@ -17,14 +16,15 @@ const gridStyle = {
     <Card title="People">
 
     <Card.Grid style={gridStyle}>
-      Content
+      Content1
     </Card.Grid>
     <Card.Grid hoverable={false} style={gridStyle}>
-      <img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"  width = "22%"/>
+      <img src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"  width = "22%"/>
+      <br/> example
     </Card.Grid>
 
     <Card.Grid style={gridStyle}>
-      <img alt="test1" src="./../../../faces/53affeca9bc842d2a59d9de918f8e7a4.png" width = "22%" />
+      <img alt="test1" src="./../../faces/7e2a2e335f2a48cf824e76e37bb6b004.png" width = "22%" />
     </Card.Grid>
 
     <Card.Grid style={gridStyle}>
