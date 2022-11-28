@@ -17,7 +17,7 @@ face_names = []
 face_encodings = []
 face_keys = []
 
-@app.route('/image', methods=['POST'])
+@app.route('/image', methods=['POST','GET'])
 def upload_image():
     img_file = request.files['img']
 

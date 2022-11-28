@@ -6,7 +6,8 @@ import {
   FundViewOutlined,
   HomeOutlined,
   UploadOutlined,
-  CameraOutlined
+  CameraOutlined,
+  NotificationOutlined
 } from '@ant-design/icons';
 
 
@@ -25,11 +26,14 @@ const App = () => {
           style={{fontSize: '32px', marginTop: '12px'}}/>, key: 'home',
     },
     {
+      label: 'About', key: 'about', icon:<NotificationOutlined/>,
+    },
+    {
       label: 'Upload', key: 'upload', icon: <UploadOutlined/>,
     }, {
-      label: 'View', key: 'app', icon: <FundViewOutlined/>,
+      label: 'Camera', key: 'TEMP', icon: <CameraOutlined />,
     },{
-      label: 'Camera', key: 'cam', icon: <CameraOutlined />,
+      label: 'View', key: 'view', icon: <FundViewOutlined/>,
     }
 
     ];
@@ -46,7 +50,7 @@ const App = () => {
   if (currentMenu === 'upload'){
     page = <UploadPage/>
   }
-  if (currentMenu === 'welcome'){
+  if (currentMenu === 'about'){
     page = <WelcomePage/>
   }
   if (currentMenu === 'view'){
