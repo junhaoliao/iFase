@@ -31,7 +31,7 @@ const App = () => {
     {
       label: 'Upload', key: 'upload', icon: <UploadOutlined/>,
     }, {
-      label: 'Camera', key: 'TEMP', icon: <CameraOutlined />,
+      label: 'Camera', key: 'camera', icon: <CameraOutlined />,
     },{
       label: 'View', key: 'view', icon: <FundViewOutlined/>,
     }
