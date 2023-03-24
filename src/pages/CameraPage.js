@@ -1,76 +1,3 @@
-// import * as React from "react";
-// import Webcam from "react-webcam";
-import * as ReactDOM from 'react-dom';
-import axios from "axios";
-import {v4 as uuidv4} from "uuid";
-import {Button, Card, Drawer, Input} from "antd";
-//
-// const videoConstraints = {
-//   width: 1280,
-//   height: 720,
-//   facingMode: "user"
-// };
-//
-// export const CameraPage = () =>{
-//     // ReactDOM.render(
-//     // <Webcam />,
-//     // document.getElementById('root')
-//     // );
-//   //   ReactDOM.render(
-//   //   <Webcam
-//   //   audio={false}
-//   //   height={720}
-//   //   screenshotFormat="image/jpeg"
-//   //   width={1280}
-//   //   videoConstraints={videoConstraints}
-//   // >
-//   //   {({ getScreenshot }) => (
-//   //     <button
-//   //       onClick={() => {
-//   //         const imageSrc = getScreenshot()
-//   //       }}
-//   //     >
-//   //       Capture photo
-//   //     </button>
-//   //   )}
-//   // </Webcam>,
-//   //   document.getElementById('root')
-//   //   );
-//
-//     // const webcamRef = React.useRef(null);
-//     //   const capture = React.useCallback(
-//     //     () => {
-//     //       const imageSrc = webcamRef.current.getScreenshot();
-//     //     },
-//     //     [webcamRef]
-//     //   );
-//     const webcamRef = React.useRef(null);
-//       const capture = React.useCallback(
-//         () => {
-//           const imageSrc = webcamRef.current.getScreenshot();
-//         },
-//         [webcamRef]
-//       );
-//
-//   return (
-//     <>
-//       <Webcam
-//         audio={false}
-//         height={720}
-//         ref={webcamRef}
-//         screenshotFormat="image/jpeg"
-//         width={720}
-//         videoConstraints={videoConstraints}
-//       />
-//       <Button variant="contained" onClick={capture}>
-//       capture photo
-//     </Button>
-//     </>
-//   );
-//
-//
-//
-// }
 import React, {createRef, useRef, useState,useEffect} from "react";
 import Webcam from "react-webcam";
 const videoConstraints = {
@@ -138,7 +65,6 @@ export const CameraPage = () =>{
       // let ctx = null;
       const cropHelperCanvas = document.createElement('canvas');
       const cropHelperCanvasCtx = cropHelperCanvas.getContext('2d');
-
 
 
       img.onload = () => {
@@ -221,20 +147,12 @@ export const CameraPage = () =>{
     a.click();
   };
 
-  return (
-    <>
-      <Webcam
-        audio={false}
-        ref={webcamRef}
-        screenshotFormat="image/png"
-        className="webcam"
-        videoConstraints={videoConstraints}
-      />
-      <canvas ref={canvasRef} className="canvas" />
-
-      <Button variant="contained" onClick={capture_recognize}>Capture and Recognize</Button>
+  return (<>
+          <Button variant="contained" onClick={capture_recognize}>Capture and Recognize</Button>
       <Button variant="contained" onClick={saveImage}>Download Image</Button>
       <br/>
+      <canvas ref={canvasRef} className="canvas" />
+
       <br/>
         <Drawer
             title={'Faces'}
@@ -245,12 +163,19 @@ export const CameraPage = () =>{
             getContainer={false}
             style={{position: 'absolute', height: '320px'}}
         >
-          <div style={{
+            <div style={{
             display: 'flex',
             flexDirection: 'row',
             gap: '30px',
             justifyContent: 'center',
           }}>
+      <Webcam
+        audio={false}
+        ref={webcamRef}
+        screenshotFormat="image/png"
+        className="webcam"
+        videoConstraints={videoConstraints}
+      />
             {faces.map((f, fIdx) => (<Card
                 key={`face-cards-${f.key}-${f.name}`}
                 size={'small'}
@@ -275,8 +200,10 @@ export const CameraPage = () =>{
                       id={`input-${f.key}`}
                       defaultValue={f.name}/>} description={''}/>
             </Card>))}
-          </div>
-        </Drawer>
+            </div>
+            </Drawer>
+
+
     </>
   );
 };
