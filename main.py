@@ -3,23 +3,31 @@ import json
 import os.path
 import threading
 from io import BytesIO
-
+import sys
 import face_recognition
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
-from flask import Flask, request,Response
+from flask import Flask, request, Response
 from flask_cors import CORS
 import cv2
 import numpy as np
+
+
 faces_path = 'faces'
 
 app = Flask(__name__)
 CORS(app)
 
-face_names = []
-face_encodings = []
-face_keys = []
+obama_image = face_recognition.load_image_file("obama.jpg")
+obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
+
+biden_image = face_recognition.load_image_file("biden.jpg")
+biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+
+face_names = ["Barack Obama", "Joe Biden"]
+face_encodings = [obama_face_encoding, biden_face_encoding]
+face_keys = []
 @app.route('/image', methods=['POST','GET'])
 def upload_image():
     img_file = request.files['img']
@@ -84,7 +92,7 @@ def recon_name():
         min_distance = 1
 
         for i in range(len(distances)):
-            if distances[i] < 0.8 and distances[i] < min_distance:
+            if distances[i] < 0.5 and distances[i] < min_distance:
                 min_distance = distances[i]
                 min_distance_idx = i
 
@@ -96,88 +104,84 @@ def recon_name():
 def webcam_realtime():
     video_capture = cv2.VideoCapture(0)
     while True:
+        # Grab a single frame of video
         ret, frame = video_capture.read()
         rgb_frame = frame[:, :, ::-1]
         face_locations_webcam = face_recognition.face_locations(rgb_frame)
         face_encodings_webcam = face_recognition.face_encodings(rgb_frame, face_locations_webcam)
         for (top, right, bottom, left), face_encoding in zip(face_locations_webcam, face_encodings_webcam):
             matches = face_recognition.compare_faces(face_encodings, face_encoding)
-            name = "?"
+            name = "Unknown"
             face_distances_webcam = face_recognition.face_distance(face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances_webcam)
-            if matches[best_match_index]:
-                name = face_names[best_match_index]
+            face_distances_webcam = face_distances_webcam.tolist()
+
+            min_distance_idx = -1
+            if len(face_distances_webcam) != 0:
+                min_distance = 1
+
+                for i in range(len(face_distances_webcam)):
+                    if face_distances_webcam[i] < 0.5 and face_distances_webcam[i] < min_distance:
+                        min_distance = face_distances_webcam[i]
+                        min_distance_idx = i
+            if min_distance_idx != -1:
+                name = face_names[min_distance_idx]
 
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
             cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        cv2.imshow('Video', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    video_capture.release()
+    cv2.destroyAllWindows()
+@app.route('/test_func_0')
+def test_func():
 
-        #cv2.imshow('Video', frame)
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
-        #    break
-    #video_capture.release()
-    #cv2.destroyAllWindows()
-
-def generate_frames():
-    camera = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(0)
     while True:
-        success, frame = camera.read()
-        if not success:
+        # sys.exit(0)
+        # Grab a single frame of video
+        ret, frame = video_capture.read()
+        if not ret:
             break
         else:
-            ret, buffer = cv2.imencode('.jpg', frame)
+            rgb_frame = frame[:, :, ::-1]
+            face_locations_webcam = face_recognition.face_locations(rgb_frame)
+            face_encodings_webcam = face_recognition.face_encodings(rgb_frame, face_locations_webcam)
+            for (top, right, bottom, left), face_encoding in zip(face_locations_webcam, face_encodings_webcam):
+                matches = face_recognition.compare_faces(face_encodings, face_encoding)
+                name = "Unknown"
+                face_distances_webcam = face_recognition.face_distance(face_encodings, face_encoding)
+                best_match_index = np.argmin(face_distances_webcam)
+                face_distances_webcam = face_distances_webcam.tolist()
+                min_distance_idx = -1
+                if len(face_distances_webcam) != 0:
+                    min_distance = 1
+
+                    for i in range(len(face_distances_webcam)):
+                        if face_distances_webcam[i] < 0.5 and face_distances_webcam[i] < min_distance:
+                            min_distance = face_distances_webcam[i]
+                            min_distance_idx = i
+
+                if min_distance_idx != -1:
+                    name = face_names[min_distance_idx]
+
+                cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                font = cv2.FONT_HERSHEY_DUPLEX
+                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
+            success, buffer = cv2.imencode('.jpg', frame)
             frame_bytes = buffer.tobytes()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
-def gen():
-    video_capture = cv2.VideoCapture(0)
-
-    while True:
-        success, frame = video_capture.read()
-
-        if not success:
-            break
-
-        # Convert the frame from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-        rgb_frame = frame[:, :, ::-1]
-
-        # Find all the faces and face encodings in the current frame
-        face_locations_webcam = face_recognition.face_locations(rgb_frame)
-        face_encodings_webcam = face_recognition.face_encodings(rgb_frame, face_locations_webcam)
-
-        # Loop through each face in the current frame
-        for (top, right, bottom, left), face_encoding in zip(face_locations_webcam, face_encodings_webcam):
-
-            matches = face_recognition.compare_faces(face_encodings, face_encoding)
-            name = "?"
-            # Find the face with the smallest distance to the current face
-           # face_distances_webcam = face_recognition.face_distance(face_encodings, face_encoding)
-           # best_match_index = np.argmin(face_distances_webcam)
-           # if matches[best_match_index]:
-            #    name = face_names[best_match_index]
-
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
-        # Convert the annotated frame back to BGR color (for displaying in OpenCV)
-        bgr_frame = rgb_frame[:, :, ::-1]
-
-        # Convert the frame to a JPEG image
-        ret, buffer = cv2.imencode('.jpg', bgr_frame)
-
-        # Yield the JPEG image as a byte string
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-
-
-@app.route('/stream')
+    video_capture.release()
+@app.route('/test_func')
 def stream():
-    return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
+    return Response(test_func(), mimetype='multipart/x-mixed-replace; boundary=frame')
 app.run()
 #test comment
+
