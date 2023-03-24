@@ -1,6 +1,7 @@
 import './App.css';
 import {Menu} from 'antd';
 import {useState} from 'react';
+import React, { Component } from 'react';
 //import Ant design UI
 import {
   FundViewOutlined,
@@ -12,7 +13,7 @@ import {
 
 
 import {UploadPage} from './pages/UploadPage';
-import {ViewPage} from './pages/ViewPage';
+import {WebcamPage} from './pages/WebcamPage';
 import {CameraPage} from './pages/CameraPage';
 import {WelcomePage} from './pages/WelcomePage';
 
@@ -33,8 +34,9 @@ const App = () => {
     }, {
       label: 'Camera', key: 'camera', icon: <CameraOutlined />,
     },{
-      label: 'View', key: 'views', icon: <FundViewOutlined/>,
+      label: 'Web Camera', key: 'webcam', icon: <FundViewOutlined/>,
     }
+
 
     ];
 
@@ -53,8 +55,8 @@ const App = () => {
   if (currentMenu === 'about'){
     page = <WelcomePage/>
   }
-  if (currentMenu === 'view'){
-    page = <ViewPage/>
+  if (currentMenu === 'webcam'){
+    page = <WebcamPage/>
   }
   if (currentMenu === 'camera'){
     page = <CameraPage/>

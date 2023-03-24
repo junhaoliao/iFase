@@ -4,6 +4,8 @@ import {createRef, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import Webcam from "react-webcam"
 import * as ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+
 
 export const UploadPage = () => {
 

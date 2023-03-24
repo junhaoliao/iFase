@@ -231,10 +231,10 @@ export const CameraPage = () =>{
         videoConstraints={videoConstraints}
       />
       <canvas ref={canvasRef} className="canvas" />
-      <br/>
 
       <Button variant="contained" onClick={capture_recognize}>Capture and Recognize</Button>
       <Button variant="contained" onClick={saveImage}>Download Image</Button>
+      <br/>
       <br/>
         <Drawer
             title={'Faces'}
