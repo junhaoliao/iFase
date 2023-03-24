@@ -20,7 +20,9 @@ export const UploadPage = () => {
     input.onchange = (ev) => {
       const f = input.files[0];
       const form = new FormData();
+
       form.append('img', f, f.name);
+      console.log(f,"+", f.name);
 
       axios.post('/image', form).then((resp) => {
         setImageSrc(URL.createObjectURL(input.files[0]));
@@ -119,9 +121,6 @@ export const UploadPage = () => {
   return (<>
     <Button variant="contained" onClick={handleButtonClick}>
       Upload
-    </Button>
-    <Button variant="contained" onClick={handleButtonClick}>
-      Capture
     </Button>
     <br/>
     <canvas id={'canvas'}/>
