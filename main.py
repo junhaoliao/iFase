@@ -8,6 +8,7 @@ import face_recognition
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from flask import Flask, request
+from flask import jsonify
 
 faces_path = 'faces'
 
@@ -17,6 +18,21 @@ face_names = []
 face_encodings = []
 face_keys = []
 
+
+# Add the new API route
+@app.route('/get_face_name', methods=['GET'])
+def get_face_name():
+    face_key = request.args.get('faceKey')
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
+
+    if os.path.exists(face_file_path):
+        with Image.open(face_file_path) as face_file:
+            face_name = face_file.text.get('FaceName', 'unknown')
+            return jsonify({"faceName": face_name})
+    else:
+        return jsonify({"faceName": '?'})
+
+
 @app.route('/image', methods=['POST'])
 def upload_image():
     img_file = request.files['img']
@@ -25,6 +41,7 @@ def upload_image():
     face_locations = face_recognition.face_locations(image)
 
     return json.dumps(face_locations)
+
 
 @app.route('/face', methods=['PUT'])
 def upload_face():
@@ -44,7 +61,9 @@ def upload_face():
 
     return 'success'
 
+
 recon_lock = threading.Lock()
+
 
 @app.route('/recon_name', methods=['POST'])
 def recon_name():
@@ -72,7 +91,8 @@ def recon_name():
         face_image = face_recognition.load_image_file(face_obj)
         face_encoding = face_recognition.face_encodings(face_image)[0]
 
-        distances = face_recognition.face_distance(face_encodings, face_encoding)
+        distances = face_recognition.face_distance(
+            face_encodings, face_encoding)
 
     distances = distances.tolist()
 
@@ -88,5 +108,6 @@ def recon_name():
     if min_distance_idx != -1:
         return face_names[min_distance_idx]
     return '?'
+
 
 app.run()

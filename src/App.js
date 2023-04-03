@@ -7,6 +7,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import {UploadPage} from './pages/UploadPage';
+import {ViewPage} from './pages/ViewPage';
 
 const App = () => {
   const [currentMenu, setCurrentMenu] = useState('upload');
@@ -34,6 +35,8 @@ const App = () => {
   let page = null
   if (currentMenu === 'upload'){
     page = <UploadPage/>
+  }else if (currentMenu === 'app') {
+    page = <ViewPage />;
   }
 
   return (<div className="App">
