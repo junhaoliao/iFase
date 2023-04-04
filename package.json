@@ -13,6 +13,12 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.0.0-experimental.8",
     "axios": "^0.27.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "knex": "^2.4.2",
+    "nodemailer": "^6.9.1",
+    "pg": "^8.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -45,5 +51,16 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:5000/"
+  "options": {
+    "allowedHosts": [
+      "localhost",
+      ".localhost"
+    ],
+    "proxy": "http://localhost:5000/"
+  },
+  "description": "1. Git 2. Node.js: https://nodejs.org/en/ 2. Python (3.10 or above): https://python.org 3. Any IDE that works with Python (PyCharm or VS Code) 4. [Mac] brew: https://brew.sh    [Windows] Visual Studio 2022: C++ Toolchain    [Linux] buildessentials",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

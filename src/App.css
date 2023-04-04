@@ -1,11 +1,129 @@
 .App {
   text-align: center;
+
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
+/*registerpage css*/
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-form-card {
+  width: 400px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.register-divider {
+  margin-bottom: 24px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 8px;
+}
+
+.form-input {
+  margin-bottom: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.login-btn {
+  width: 100%;
+}
+
+
+
+/*loginpagecss*/
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-form-card {
+  width: 400px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-divider {
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 8px;
+}
+
+.form-input {
+  margin-bottom: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.register-btn {
+  width: 100%;
+}
+
+/*.login-form, .register-form{*/
+/*    text-align: left;*/
+/*    display: flex;*/
+/*    align-items: start;*/
+/*    flex-direction: column;*/
+/*    !*border: 50px solid lightblue;*!*/
+/*    !*border-radius: 10px;*!*/
+/*    !*background-color: lightblue;*!*/
+/*    margin-bottom: 10px;*/
+
+
+/*}*/
+/*.ss{*/
+/*    margin-bottom: 10px;*/
+
+/*}*/
+/*.auth-form-container{*/
+/*    text-align: left;*/
+
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    flex-direction: column;*/
+
+
+
+/*}*/
+
+.space-align-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
