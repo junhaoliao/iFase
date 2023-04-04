@@ -120,7 +120,6 @@
 //
 // export default App;
 
-
 import "./App.css";
 import { Menu } from "antd";
 import { useState } from "react";
@@ -133,12 +132,14 @@ import {
   CameraOutlined,
   NotificationOutlined,
   LogoutOutlined,
+  FolderViewOutlined
 } from "@ant-design/icons";
 
 import { UploadPage } from "./pages/UploadPage";
 import { WebcamPage } from "./pages/WebcamPage";
 import { CameraPage } from "./pages/CameraPage";
 import { WelcomePage } from "./pages/WelcomePage";
+import { ViewPage } from "./pages/ViewPage";
 
 const App = () => {
   const [currentForm, setCurrentForm] = useState("login");
@@ -184,6 +185,11 @@ const App = () => {
       key: "webcam",
       icon: <FundViewOutlined />,
     },
+    {
+      label: "View ",
+      key: "view",
+      icon: <FolderViewOutlined />,
+    },
   ];
 
   const handleMenuClick = (ev) => {
@@ -207,6 +213,9 @@ const App = () => {
   }
   if (currentMenu === "camera") {
     page = <CameraPage />;
+  }
+  if (currentMenu === "view") {
+    page = <ViewPage />;
   }
 
   return (

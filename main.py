@@ -12,6 +12,8 @@ from flask_cors import CORS
 import cv2
 import numpy as np
 
+from flask import jsonify
+
 
 faces_path = 'faces'
 
@@ -28,6 +30,22 @@ biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 face_names = ["Barack Obama", "Joe Biden"]
 face_encodings = [obama_face_encoding, biden_face_encoding]
 face_keys = []
+
+# Add the new API route
+@app.route('/get_face_name', methods=['GET'])
+def get_face_name():
+    face_key = request.args.get('faceKey')
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
+
+    if os.path.exists(face_file_path):
+        with Image.open(face_file_path) as face_file:
+            face_name = face_file.text.get('FaceName', 'unknown')
+            return jsonify({"faceName": face_name})
+    else:
+        return jsonify({"faceName": '?'})
+
+
+
 @app.route('/image', methods=['POST','GET'])
 def upload_image():
     img_file = request.files['img']
