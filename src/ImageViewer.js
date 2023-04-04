@@ -6,18 +6,11 @@ const ImageViewer = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Helper function to capitalize the first letter of each word in a string
-  const capitalizeEachWord = (str) => {
-    return str
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
   useEffect(() => {
     const fetchImages = async () => {
       const imageFiles = require.context("../faces", true, /\.(png)$/);
       const imagePaths = imageFiles.keys().map(imageFiles);
+      
 
       const imageMetadata = await Promise.all(
         imagePaths.map(async (imagePath) => {
@@ -27,21 +20,28 @@ const ImageViewer = () => {
           });
           const faceName = response.data.faceName || "";
 
-          // Capitalize the first letter of each word in the face name
-          const formattedFaceName =
-            /^[a-zA-Z]/.test(faceName) && faceName !== "?"
-              ? capitalizeEachWord(faceName).split(" ").pop()
-              : "";
-
-          return { imagePath, faceName: formattedFaceName };
+          return { imagePath, faceName };
         })
       );
 
-      setImages(imageMetadata);
+      // Filter images to only include those with a valid faceName
+      const validImages = imageMetadata.filter(
+        (image) =>
+          image.faceName !== "" &&
+          image.faceName !== "?" &&
+          image.faceName !== "unknownn"
+      );
+
+      setImages(validImages);
       setLoading(false);
     };
     fetchImages();
   }, []);
+
+  const getLastWord = (str) => {
+    const words = str.split(" ");
+    return words[words.length - 1];
+  };
 
   return (
     <div className="image-viewer">
@@ -54,7 +54,7 @@ const ImageViewer = () => {
         images.map((image, index) => (
           <div className="image-container" key={index}>
             <img className="image" src={image.imagePath} alt={`img-${index}`} />
-            <p>{image.faceName}</p>
+            <p>{getLastWord(image.faceName)}</p>
           </div>
         ))
       ) : (
