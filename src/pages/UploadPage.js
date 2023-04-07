@@ -118,17 +118,14 @@ export const UploadPage = () => {
     <Button variant="contained" onClick={handleButtonClick}>
       Upload
     </Button>
-    <Button variant="contained" onClick={handleButtonClick}>
-      Capture
-    </Button>
     <br/>
     <canvas id={'canvas'}/>
     <Drawer
         title={'Faces'}
         placement={'bottom'}
         mask={false}
-        closable={false}
-        visible={true}
+        closable={true}
+        visible={false}
         getContainer={false}
         style={{position: 'absolute', height: '320px'}}
     >
