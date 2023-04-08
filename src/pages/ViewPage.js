@@ -1,43 +1,88 @@
-import * as react from 'react';
-import {Card,Input} from 'antd';
-import {createRef, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../ImageViewer.css";
+import { Card, Input } from "antd";
 
+const ImageViewer = () => {
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const gridStyle = {
+    width: "20%",
+    textAlign: "center",
+  };
+  useEffect(() => {
+    const fetchImages = async () => {
+      setTimeout(async () => {
+        const imageFiles = require.context("../../faces", true, /\.(png)$/);
+        const imagePaths = imageFiles
+          .keys()
+          .map((key) => key.replace("./", ""));
 
-export const ViewPage = () => {
-const gridStyle = {
-  width: '20%',
-  textAlign: 'center',
+        const imageMetadata = await Promise.all(
+          imagePaths.map(async (imagePath) => {
+            const faceKey = imagePath.split("/").pop().split(".")[0];
+            const response = await axios.get("/get_face_name", {
+              params: { faceKey },
+            });
+            const faceName = response.data.faceName || "";
+
+            return { imagePath: imageFiles(`./${imagePath}`), faceName };
+          })
+        );
+
+        // Filter images to only include those with a valid faceName
+        const validImages = imageMetadata.filter(
+          (image) =>
+            image.faceName !== "" &&
+            image.faceName !== "?" &&
+            image.faceName !== "unknownn"
+        );
+
+        setImages(validImages);
+        setLoading(false);
+      }, 1000);
+    };
+
+    fetchImages();
+  }, []);
+
+  const getLastWord = (str) => {
+    const words = str.split(" ");
+    return words[words.length - 1];
+  };
+
+  return (
+    <div className="image-viewer">
+      {loading ? (
+        <div className="loading-container">
+          <h1>Loading Images...</h1>
+          <div className="spinner"></div>
+        </div>
+      ) : images.length > 0 ? (
+        images.map((image, index) => (
+          <Card.Grid style={gridStyle}>
+            <div className="image-container" key={index}>
+              <img
+                className="image"
+                src={image.imagePath}
+                alt={`img-${index}`}
+              />
+              <br />
+              {getLastWord(image.faceName)}
+            </div>
+          </Card.Grid>
+        ))
+      ) : (
+        <p>No images found.</p>
+      )}
+    </div>
+  );
 };
 
-  return (<>
-
+export const ViewPage = () => (
+  <>
     <Card title="People">
-
-    <Card.Grid style={gridStyle}>
-      <img alt="test1" src="https://media.allure.com/photos/6154778ae59dcf29244cc558/3:4/w_2310,h_3080,c_limit/Dwayne%20The%20Rock%20Johnson%20Nail%20Art%20Lede.jpg" width = "22%" />
-      <br/> d.Johnson
-    </Card.Grid>
-    <Card.Grid hoverable={false} style={gridStyle}>
-      <img src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"  width = "22%"/>
-      <br/> example
-    </Card.Grid>
-
-    <Card.Grid style={gridStyle}>
-      r1c3
-    </Card.Grid>
-
-    <Card.Grid style={gridStyle}>
-      r1c4
-    </Card.Grid>
-
-
+      <ImageViewer />
     </Card>
-
-
-
-
-
-  </>)
-};
+  </>
+);
