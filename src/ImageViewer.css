@@ -1,3 +1,22 @@
+
+
+/* For button.css */
+.image-container .image {
+  max-width: 100%;
+}
+
+.image-container button {
+  width: 100%;
+  background-color: transparent;
+  color: inherit;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.image-container button:hover {
+  background-color: lightblue;
+  color: white;
+}
+
 .image-viewer {
   display: flex;
   flex-wrap: wrap;
@@ -13,10 +32,6 @@
 .image {
   width: 200px;
   height: auto;
-}
-.image-container p {
-  font-weight: bold;
-  margin: 0;
 }
 
 .spinner {

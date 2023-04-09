@@ -18,7 +18,8 @@ import { CameraPage } from "./pages/CameraPage";
 import { WelcomePage } from "./pages/WelcomePage";
 import { ViewPage } from "./pages/ViewPage";
 
-const App = () => {const [currentMenu, setCurrentMenu] = useState("about");
+const App = () => {
+  const [currentMenu, setCurrentMenu] = useState("about");
 
   const menuItems = [
     {
