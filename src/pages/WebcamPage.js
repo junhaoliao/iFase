@@ -99,6 +99,13 @@ export const WebcamPage = () => {
         console.log(resp);
       })
   };
+  const handleStopFlag = () => {
+    axios.get('http://127.0.0.1:5000/stream_stop')
+      .then((resp) => {
+        console.log(resp);
+      })
+    window.stop()
+  };
 
   return (
     <div>
@@ -106,6 +113,9 @@ export const WebcamPage = () => {
       <br />
       <Button onClick={handleTogglePause}>
         {isPaused ? 'Resume' : 'Pause'}
+      </Button>
+        <Button onClick={handleStopFlag}>
+        Stop
       </Button>
     </div>
   );
