@@ -164,7 +164,7 @@ def recon_name():
 
 @app.route('/webcam_realtime')
 def webcam_realtime():
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(1)
     while True:
         # Grab a single frame of video
         ret, frame = video_capture.read()
