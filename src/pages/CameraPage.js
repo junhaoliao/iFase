@@ -75,7 +75,7 @@ import React, {createRef, useRef, useState,useEffect} from "react";
 import Webcam from "react-webcam";
 const videoConstraints = {
   width: 720,
-  height: 360,
+  height: 480,
   facingMode: "user"
 };
 
@@ -264,6 +264,7 @@ export const CameraPage = () =>{
       />
         <br/>
 
+
       <canvas ref={canvasRef} className="canvas" />
         <Drawer
             title={'Faces'}
@@ -272,7 +273,7 @@ export const CameraPage = () =>{
             closable={false}
             visible={true}
             getContainer={false}
-            style={{position: 'absolute', height: '320px'}}
+            style={{position: 'absolute', height: '160px'}}
         >
           <div style={{
             display: 'flex',
