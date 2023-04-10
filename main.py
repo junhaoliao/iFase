@@ -11,6 +11,7 @@ from flask import Flask, request, Response
 from flask_cors import CORS
 import cv2
 import numpy as np
+from flask import jsonify
 
 
 faces_path = 'faces'
@@ -30,7 +31,52 @@ biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 face_names = ["Barack Obama", "Joe Biden"]
 face_encodings = [obama_face_encoding, biden_face_encoding]
 face_keys = []
-@app.route('/image', methods=['POST','GET'])
+
+
+
+@app.route('/delete_image', methods=['DELETE'])
+def delete_image():
+    face_key = request.args.get('faceKey')
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
+
+    if os.path.exists(face_file_path):
+        os.remove(face_file_path)
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "error", "message": "Image not found"})
+
+
+@app.route('/modify_image_metadata', methods=['PUT'])
+def modify_image_metadata():
+    face_key = request.json['faceKey']
+    new_face_name = request.json['newFaceName']
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
+
+    if os.path.exists(face_file_path):
+        with Image.open(face_file_path) as face_file:
+            metadata = PngInfo()
+            metadata.add_text("FaceName", new_face_name)
+            face_file.save(face_file_path, pnginfo=metadata)
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "error", "message": "Image not found"})
+
+
+# Add the new API route
+@app.route('/get_face_name', methods=['GET'])
+def get_face_name():
+    face_key = request.args.get('faceKey')
+    face_file_path = os.path.join(faces_path, f'{face_key}.png')
+
+    if os.path.exists(face_file_path):
+        with Image.open(face_file_path) as face_file:
+            face_name = face_file.text.get('FaceName', 'unknown')
+            return jsonify({"faceName": face_name})
+    else:
+        return jsonify({"faceName": '?'})
+
+
+@app.route('/image', methods=['POST', 'GET'])
 def upload_image():
     global stop_flag
     stop_flag = True
@@ -40,6 +86,7 @@ def upload_image():
     face_locations = face_recognition.face_locations(image)
     stop_flag = False
     return json.dumps(face_locations)
+
 
 @app.route('/face', methods=['PUT'])
 def upload_face():
@@ -61,7 +108,9 @@ def upload_face():
     stop_flag = False
     return 'success'
 
+
 recon_lock = threading.Lock()
+
 
 @app.route('/recon_name', methods=['POST'])
 def recon_name():
@@ -112,6 +161,50 @@ def recon_name():
     return '?'
 
 
+@app.route('/webcam_realtime')
+def webcam_realtime():
+    video_capture = cv2.VideoCapture(0)
+    while True:
+        # Grab a single frame of video
+        ret, frame = video_capture.read()
+        rgb_frame = frame[:, :, ::-1]
+        face_locations_webcam = face_recognition.face_locations(rgb_frame)
+        face_encodings_webcam = face_recognition.face_encodings(
+            rgb_frame, face_locations_webcam)
+        for (top, right, bottom, left), face_encoding in zip(face_locations_webcam, face_encodings_webcam):
+            matches = face_recognition.compare_faces(
+                face_encodings, face_encoding)
+            name = "Unknown"
+            face_distances_webcam = face_recognition.face_distance(
+                face_encodings, face_encoding)
+            best_match_index = np.argmin(face_distances_webcam)
+            face_distances_webcam = face_distances_webcam.tolist()
+
+            min_distance_idx = -1
+            if len(face_distances_webcam) != 0:
+                min_distance = 1
+
+                for i in range(len(face_distances_webcam)):
+                    if face_distances_webcam[i] < 0.5 and face_distances_webcam[i] < min_distance:
+                        min_distance = face_distances_webcam[i]
+                        min_distance_idx = i
+            if min_distance_idx != -1:
+                name = face_names[min_distance_idx]
+
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(frame, (left, bottom - 35),
+                          (right, bottom), (0, 0, 255), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, name, (left + 6, bottom - 6),
+                        font, 1.0, (255, 255, 255), 1)
+        cv2.imshow('Video', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    video_capture.release()
+    cv2.destroyAllWindows()
+
+
+@app.route('/test_func_0')
 def test_func():
     global process_this_frame
     global stop_flag
@@ -160,15 +253,18 @@ def test_func():
                 frame_bytes = buffer.tobytes()
 
                 yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
                 while freeze:
                     print("paused")
         video_capture.release()
+
+
 @app.route('/test_func')
 def stream():
     global stop_flag
     if not stop_flag:
         return Response(test_func(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 @app.route('/stream_pause')
 def stream_pause():
@@ -176,7 +272,7 @@ def stream_pause():
     freeze = not freeze
     print(freeze)
     return 'pause/resume'
+
+
 app.run()
-#test comment
-
-
+# test comment
