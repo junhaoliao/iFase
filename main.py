@@ -218,35 +218,36 @@ def test_func():
             if not ret:
                 break
             else:
-                small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-                rgb_frame = small_frame[:, :, ::-1]
-                face_locations_webcam = face_recognition.face_locations(
+                if process_this_frame:
+                    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+                    rgb_frame = small_frame[:, :, ::-1]
+                    face_locations_webcam = face_recognition.face_locations(
                     rgb_frame)
-                face_encodings_webcam = face_recognition.face_encodings(
+                    face_encodings_webcam = face_recognition.face_encodings(
                     rgb_frame, face_locations_webcam)
                 for (top, right, bottom, left), face_encoding in zip(face_locations_webcam, face_encodings_webcam):
                     top *= 4
                     right *= 4
                     bottom *= 4
                     left *= 4
-                    if process_this_frame:
-                        #matches = face_recognition.compare_faces(face_encodings, face_encoding)
-                        name = "Unknown"
-                        face_distances_webcam = face_recognition.face_distance(
+                    #if True:
+                    #matches = face_recognition.compare_faces(face_encodings, face_encoding)
+                    name = "Unknown"
+                    face_distances_webcam = face_recognition.face_distance(
                             face_encodings, face_encoding)
-                        #best_match_index = np.argmin(face_distances_webcam)
-                        face_distances_webcam = face_distances_webcam.tolist()
-                        min_distance_idx = -1
-                        if len(face_distances_webcam) != 0:
-                            min_distance = 1
+                    #best_match_index = np.argmin(face_distances_webcam)
+                    face_distances_webcam = face_distances_webcam.tolist()
+                    min_distance_idx = -1
+                    if len(face_distances_webcam) != 0:
+                        min_distance = 1
 
-                            for i in range(len(face_distances_webcam)):
-                                if face_distances_webcam[i] < 0.5 and face_distances_webcam[i] < min_distance:
+                        for i in range(len(face_distances_webcam)):
+                            if face_distances_webcam[i] < 0.5 and face_distances_webcam[i] < min_distance:
                                     min_distance = face_distances_webcam[i]
                                     min_distance_idx = i
 
-                        if min_distance_idx != -1:
-                            name = face_names[min_distance_idx]
+                    if min_distance_idx != -1:
+                        name = face_names[min_distance_idx]
                     process_this_frame = not process_this_frame
                     cv2.rectangle(frame, (left, top),
                                   (right, bottom), (0, 0, 255), 2)
