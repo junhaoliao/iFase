@@ -230,7 +230,7 @@ def test_func():
                     bottom *= 4
                     left *= 4
                     name = None
-                    if process_this_frame:
+                    if True:
                         #matches = face_recognition.compare_faces(face_encodings, face_encoding)
 
                         face_distances_webcam = face_recognition.face_distance(
