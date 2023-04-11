@@ -164,7 +164,7 @@ def recon_name():
 
 @app.route('/webcam_realtime')
 def webcam_realtime():
-    video_capture = cv2.VideoCapture(1)
+    video_capture = cv2.VideoCapture(0)
     while True:
         # Grab a single frame of video
         ret, frame = video_capture.read()
@@ -210,7 +210,7 @@ def test_func():
     global process_this_frame
     global stop_flag
     while not stop_flag:
-        video_capture = cv2.VideoCapture(1)
+        video_capture = cv2.VideoCapture(0)
         while True:
             # sys.exit(0)
             # Grab a single frame of video
@@ -229,10 +229,10 @@ def test_func():
                     right *= 4
                     bottom *= 4
                     left *= 4
-                    name = None
+                    #name = None
                     if process_this_frame:
                         #matches = face_recognition.compare_faces(face_encodings, face_encoding)
-
+                        name = "Unknown"
                         face_distances_webcam = face_recognition.face_distance(
                             face_encodings, face_encoding)
                         #best_match_index = np.argmin(face_distances_webcam)
