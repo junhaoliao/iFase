@@ -229,7 +229,11 @@ def test_func():
                     right *= 4
                     bottom *= 4
                     left *= 4
+<<<<<<< HEAD
                     #name = None
+=======
+                    name = None
+>>>>>>> 8009c6d2b174ca3b89930f267447f95db4b8557a
                     if True:
                         #matches = face_recognition.compare_faces(face_encodings, face_encoding)
                         name = "Unknown"
