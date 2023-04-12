@@ -164,7 +164,7 @@ def recon_name():
 
 @app.route('/webcam_realtime')
 def webcam_realtime():
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture(1)
     while True:
         # Grab a single frame of video
         ret, frame = video_capture.read()
@@ -210,7 +210,7 @@ def test_func():
     global process_this_frame
     global stop_flag
     while not stop_flag:
-        video_capture = cv2.VideoCapture(0)
+        video_capture = cv2.VideoCapture(1)
         while True:
             # sys.exit(0)
             # Grab a single frame of video
@@ -229,9 +229,10 @@ def test_func():
                     right *= 4
                     bottom *= 4
                     left *= 4
+                    name = None
                     if process_this_frame:
                         #matches = face_recognition.compare_faces(face_encodings, face_encoding)
-                        name = "Unknown"
+
                         face_distances_webcam = face_recognition.face_distance(
                             face_encodings, face_encoding)
                         #best_match_index = np.argmin(face_distances_webcam)
@@ -247,6 +248,8 @@ def test_func():
 
                         if min_distance_idx != -1:
                             name = face_names[min_distance_idx]
+                        else:
+                            name = "unknown"
                     process_this_frame = not process_this_frame
                     cv2.rectangle(frame, (left, top),
                                   (right, bottom), (0, 0, 255), 2)
@@ -263,7 +266,19 @@ def test_func():
                        b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
                 while freeze:
                     print("paused")
+                    if stop_flag:
+                        stop_flag = False
+                        break
+
+                if freeze:
+                    break
+
+            if stop_flag:
+                stop_flag = False
+                break
+
         video_capture.release()
+        cv2.destroyAllWindows()
 
 
 @app.route('/test_func')
@@ -281,5 +296,13 @@ def stream_pause():
     return 'pause/resume'
 
 
+@app.route('/stream_stop')
+def stream_stop():
+    global stop_flag
+    stop_flag = not stop_flag
+    print(stop_flag)
+    return 'Stop'
+
+
 app.run()
-# test comment
+#test comment
