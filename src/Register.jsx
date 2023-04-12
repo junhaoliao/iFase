@@ -135,9 +135,11 @@ export const Register = (props) => {
         props.onRegister();
       } else {
         console.log(response.data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   };
 
@@ -146,6 +148,20 @@ export const Register = (props) => {
       <Card className="auth-form-card">
         <Divider className="register-divider">iFase Register</Divider>
         <form className="register-form" onSubmit={handle_submit}>
+
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="firstname.lastname@mail.utoronto.ca"
+            id="email"
+            name="email"
+            className="form-input"
+          />
+          <br></br>
           <label htmlFor="name" className="form-label">
             Account name
           </label>
@@ -157,18 +173,6 @@ export const Register = (props) => {
             id="name"
             name="name"
             prefix={<UserOutlined className="site-form-item-icon" />}
-            className="form-input"
-          />
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="firstname.lastname@mail.utoronto.ca"
-            id="email"
-            name="email"
             className="form-input"
           />
           <label htmlFor="password" className="form-label">
@@ -201,5 +205,3 @@ export const Register = (props) => {
     </div>
   );
 };
-
-

@@ -13,6 +13,7 @@ import {
   FolderViewOutlined,
   UserOutlined
 } from "@ant-design/icons";
+import axios from "axios";
 
 import { UploadPage } from "./pages/UploadPage";
 import { WebcamPage } from "./pages/WebcamPage";
@@ -34,7 +35,18 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+  axios.post("http://localhost:5001/logout")
+    .then(response => {
+      if (response.status === 204) {
+        // Clear token from client-side
+        document.cookie = 'token=;';
+      }
+    })
+    .catch(error => console.log(error));
+  // Redirect user to login page
+      setIsLoggedIn(false);
+      setCurrentMenu('login');
+      // window.location.replace('/login');
   };
 
   const menuItems = [
@@ -114,7 +126,6 @@ const App = () => {
               key="logout"
               icon={<LogoutOutlined />}
               onClick={handleLogout}
-
             >
               Logout
             </Menu.Item>
