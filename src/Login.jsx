@@ -72,7 +72,7 @@
 //   );
 // };
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, Divider, Drawer, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import axios from "axios";
@@ -84,19 +84,38 @@ export const Login = (props) => {
   const handle_submit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/login", {
+      const response = await axios.post("http://localhost:5002/login", {
         email,
         password: pass,
       });
       if (response.data.success) {
+        // Store token and expiration time in local storage
+        const expirationTime = new Date().getTime() + 600000; // 1 minutes
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expirationTime', expirationTime);
+
         props.onLogin();
       } else {
         console.log(response.data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const expirationTime = localStorage.getItem('expirationTime');
+
+    // Check if token and expiration time are both valid
+    if (token && expirationTime && new Date().getTime() < expirationTime) {
+      props.onLogin();
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationTime');
+    }
+  }, []);
 
   return (
     <div className="login-container">

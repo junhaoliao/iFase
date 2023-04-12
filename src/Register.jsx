@@ -100,7 +100,7 @@
 //   );
 // };
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -125,27 +125,61 @@ export const Register = (props) => {
   const handle_submit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/register", {
+      const response = await axios.post("http://localhost:5002/register", {
         name,
         email,
         password: pass,
       });
 
       if (response.data.success) {
+        // Store token and expiration time in local storage
+        const expirationTime = new Date().getTime() + 600000; // 10 minutes
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expirationTime', expirationTime);
+
         props.onRegister();
       } else {
         console.log(response.data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       console.log(error.message);
+      alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const expirationTime = localStorage.getItem('expirationTime');
+
+    // Check if token and expiration time are both valid
+    if (token && expirationTime && new Date().getTime() < expirationTime) {
+      props.onLogin();
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expirationTime');
+    }
+  }, []);
 
   return (
     <div className="register-container">
       <Card className="auth-form-card">
         <Divider className="register-divider">iFase Register</Divider>
         <form className="register-form" onSubmit={handle_submit}>
+
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="firstname.lastname@mail.utoronto.ca"
+            id="email"
+            name="email"
+            className="form-input"
+          />
+          <br></br>
           <label htmlFor="name" className="form-label">
             Account name
           </label>
@@ -157,18 +191,6 @@ export const Register = (props) => {
             id="name"
             name="name"
             prefix={<UserOutlined className="site-form-item-icon" />}
-            className="form-input"
-          />
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="firstname.lastname@mail.utoronto.ca"
-            id="email"
-            name="email"
             className="form-input"
           />
           <label htmlFor="password" className="form-label">
@@ -201,5 +223,4 @@ export const Register = (props) => {
     </div>
   );
 };
-
 

@@ -1,3 +1,4 @@
+
 import base64
 import json
 import os.path
@@ -12,7 +13,8 @@ from flask_cors import CORS
 import cv2
 import numpy as np
 from flask import jsonify
-
+from pillow_heif import register_heif_opener
+register_heif_opener()
 
 faces_path = 'faces'
 
@@ -81,6 +83,7 @@ def upload_image():
     global stop_flag
     stop_flag = True
     img_file = request.files['img']
+   # print(img_file)
 
     image = face_recognition.load_image_file(img_file)
     face_locations = face_recognition.face_locations(image)
@@ -121,7 +124,11 @@ def recon_name():
 
     with recon_lock:
         for f in os.listdir(faces_path):
+
+            if f == '.DS_Store':
+                continue
             key = f.split('.')[0]
+
             if key in face_keys:
                 continue
 
@@ -132,8 +139,10 @@ def recon_name():
                 face_names.append(face_file.text['FaceName'])
 
             known_image = face_recognition.load_image_file(face_file_path)
-            known_encoding = face_recognition.face_encodings(known_image)[0]
-
+            try:
+                known_encoding = face_recognition.face_encodings(known_image)[0]
+            except IndexError as e:
+                continue
             face_encodings.append(known_encoding)
 
         image_bytes = base64.b64decode(face_img)
@@ -207,6 +216,7 @@ def webcam_realtime():
 
 @app.route('/test_func_0')
 def test_func():
+
     global process_this_frame
     global stop_flag
     while not stop_flag:
@@ -229,11 +239,8 @@ def test_func():
                     right *= 4
                     bottom *= 4
                     left *= 4
-<<<<<<< HEAD
-                    #name = None
-=======
                     name = None
->>>>>>> 8009c6d2b174ca3b89930f267447f95db4b8557a
+
                     if True:
                         #matches = face_recognition.compare_faces(face_encodings, face_encoding)
                         name = "Unknown"
